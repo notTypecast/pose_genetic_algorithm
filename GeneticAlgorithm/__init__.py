@@ -1,0 +1,3 @@
+from GeneticAlgorithm.Individual import Individual
+from GeneticAlgorithm.Population import Population
+from GeneticAlgorithm.GeneticAlgorithm import GeneticAlgorithm
