@@ -79,14 +79,14 @@ class Individual:
         Performs mutations on each bit of the chromosome with a given probability
         :param mutation_prob: the probability to flip a bit
         """
-        for gene in self.genes:
+        for i, gene in enumerate(self.genes):
             new_gene = ""
             
-            for i in range(len(gene)):
+            for j in range(len(gene)):
                 if random() < mutation_prob:
-                    new_gene += "0" if gene[i] == "1" else "1"
+                    new_gene += "0" if gene[j] == "1" else "1"
                 else:
-                    new_gene += gene[i]
+                    new_gene += gene[j]
 
             self.genes[i] = new_gene
 
@@ -97,7 +97,7 @@ class Individual:
         :param size: size of bitstring
         """
         bitstr = ""
-        for i in range(size):
+        for _ in range(size):
             bitstr += str(randint(0, 1))
 
         return bitstr

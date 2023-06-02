@@ -29,6 +29,16 @@ class Population:
     
     def __getitem__(self, key):
         return self.individuals[key]
+    
+    def replace(self, new_population):
+        """
+        Replaces the old population with a new one
+        :param new_population: a list of Individuals of the new population; must be of the same size as old list
+        """
+        if len(new_population) != len(self.individuals):
+            raise ValueError("incorrect population size")
+        
+        self.individuals = new_population
 
     def get_cumulative_probabilities(self, fitness_func):
         """
