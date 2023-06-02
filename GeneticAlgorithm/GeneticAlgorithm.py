@@ -1,4 +1,4 @@
-from random import random, choice, randint
+from random import random, choice
 from copy import deepcopy
 from math import ceil
 from GeneticAlgorithm.Population import Population
@@ -104,6 +104,7 @@ class GeneticAlgorithm:
         """
         Performs roulette wheel selection based on fitness, returning a list of selected individuals
         TODO: algorithm doesn't converge with this, figure out why
+        TODO: make all fitnesses positive by adding polarization
         """
         cumulative_prob = self.population.get_cumulative_probabilities(self.fitness_func)
 
@@ -207,11 +208,12 @@ class GeneticAlgorithm:
         self.epochs += 1
         if self.epochs == self.max_epochs:
             self.stop = True
-
+        
         return True
     
     def get_fittest(self):
         """
         Returns current individual with maximum fitness, and its fitness value
         """
+
         return self.fittest, self.max_fitness

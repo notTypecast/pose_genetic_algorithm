@@ -5,7 +5,6 @@ Consists of:
 -> Normalizing data to [0, 1]
 Creates file "data/dataset-normalized.csv"
 """
-
 import csv
 
 # read data from csv file
@@ -32,13 +31,17 @@ def int_l(l):
     return new_l
 
 # keep only relevant data
-rel_data = []
+rel_data = [int_l(data[1][6:])]
 # keep extrema for normalization
 maxima = int_l(data[1][6:-1])
 minima = int_l(data[1][6:-1])
+# get classes from data
+class_means = {}
 
 for row in data[2:]:
     rel_data.append(int_l(row[6:]))
+    if row[-1] not in class_means:
+        class_means[row[-1]] = [0]*len(minima)
 
     # update extrema
     for i, val in enumerate(rel_data[-1][:-1]):
@@ -48,34 +51,17 @@ for row in data[2:]:
         if val > maxima[i]:
             maxima[i] = val
 
-# normalize data
+# calculate means per column
 for row in rel_data:
-    for i, val in enumerate(row[:-1]):
-        row[i] = (val - minima[i]) / (maxima[i] - minima[i])
+    for i, column in enumerate(row[:-1]):
+        class_means[row[-1]][i] += column
 
-# get mean values (desired values) for each class
-classes = {}
-for row in data[2:]:
-    row = row[6:]
-    if row[-1] not in classes:
-        classes[row[-1]] = []
-
-    classes[row[-1]].append(int_l(row[:-1]))
-
-class_means = {class_: [0]*len(rel_data[0][:-1]) for class_ in classes}
-for class_ in classes:
-    for row in classes[class_]:
-        for j, col in enumerate(row):
-            class_means[class_][j] += col
-    
-    class_means[class_] = [s/len(classes[class_]) for s in class_means[class_]]
-
-# normalize class means
-# this is the same as taking the mean of the normalized data (which would probably be more efficient)
+class_means_normalized = {}
 for class_ in class_means:
-    class_mean = class_means[class_]
-    for i, mean in enumerate(class_mean):
-        class_mean[i] = (mean - minima[i]) / (maxima[i] - minima[i])
+    for i in range(len(class_means[class_])):
+        class_means[class_][i] /= len([r for r in rel_data if r[-1] == class_])
+    
+    class_means_normalized[class_] = [(mean - minima[i])/(maxima[i] - minima[i]) for i, mean in enumerate(class_means[class_])]
 
 # write means to csv file
 with open("data/class-means.csv", "w") as csvf:
@@ -83,6 +69,20 @@ with open("data/class-means.csv", "w") as csvf:
 
     for class_ in class_means:
         writer.writerow([class_] + class_means[class_])
+
+# write normalized means to csv file
+with open("data/class-means-normalized.csv", "w") as csvf:
+    writer = csv.writer(csvf, delimiter=";")
+
+    for class_ in class_means_normalized:
+        writer.writerow([class_] + class_means_normalized[class_])
+
+# write extrema to csv file
+with open("data/normalization-extrema.csv", "w") as csvf:
+    writer = csv.writer(csvf, delimiter=";")
+
+    writer.writerow(["minima"] + minima)
+    writer.writerow(["maxima"] + maxima)
 
 """
 # write data to csv file
