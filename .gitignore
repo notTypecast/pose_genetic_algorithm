@@ -3,3 +3,4 @@ description.pdf
 __pycache__/
 GeneticAlgorithm/__pycache__/
 plots/
+data/dataset-normalized.csv
