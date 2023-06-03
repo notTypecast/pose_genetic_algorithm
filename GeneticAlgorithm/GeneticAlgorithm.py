@@ -16,8 +16,8 @@ class GeneticAlgorithm:
                  selection="tournament", 
                  tournament_size=3, 
                  max_epochs = 1000, 
-                 epoch_threshold=10, 
-                 minimum_improvement=0.01, 
+                 epoch_threshold=8, 
+                 minimum_improvement=0.01,
                  early_stopping=True
                  ):
         """
@@ -68,8 +68,8 @@ class GeneticAlgorithm:
         self.early_stopping = early_stopping
 
         # fitness values for the current fittest individual
-        self.fittest = None
-        self.max_fitness = 0
+        self.max_fitness, max_fitness_index = self._find_fittest()
+        self.fittest = self.population[max_fitness_index]
 
         self.epochs = 0 # current epoch
         self.no_improvement_epochs = 0 # epochs there hasn't been improvement for

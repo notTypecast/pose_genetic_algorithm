@@ -2,8 +2,12 @@
 Preprocesses the initial data
 Consists of:
 -> Keeping only relevant data (sensor values and class)
--> Normalizing data to [0, 1]
-Creates file "data/dataset-normalized.csv"
+-> Calculating the data extrema and means per column and class
+-> Normalizing the means
+Creates the following files:
+-> "data/class-means.csv": mean values for each column, per class
+-> "data/class-means-normalized.csv": normalized mean values for each column, per class
+-> "data/normalization-extrema.csv": minima and maxima used for normalization, per column
 """
 import csv
 
